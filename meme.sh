@@ -40,8 +40,10 @@ iptables -A OUTPUT -p udp --sport 631 -j ACCEPT
 iptables -A OUTPUT -p tcp --sport 161 -j ACCEPT
 iptables -A OUTPUT -p udp --sport 161 -j ACCEPT
 #mysql
-iptables -A INPUT -p tcp -m tcp --dport 3306 -j ACCEPT
+iptables -A INPUT -p tcp --dport 3306 -j ACCEPT
 iptables -A OUTPUT -p tcp --sport 3306 -j ACCEPT
+iptables -A INPUT -p udp --dport 3306 -j ACCEPT
+iptables -A OUTPUT -p udp --sport 3306 -j ACCEPT
 
 #Restringir input
 iptables -P INPUT DROP
