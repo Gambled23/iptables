@@ -20,9 +20,30 @@ iptables -A INPUT -p tcp --dport 53 -j ACCEPT
 iptables -A INPUT -p udp --dport 53 -j ACCEPT
 iptables -A OUTPUT -p tcp --sport 53 -j ACCEPT
 iptables -A OUTPUT -p udp --sport 53 -j ACCEPT
-#Restringir input
+#samba no funciona
+iptables -A INPUT -p udp --dport 137 -j ACCEPT
+iptables -A INPUT -p udp --dport 138 -j ACCEPT
+iptables -A INPUT -p tcp --dport 139 -j ACCEPT
+iptables -A INPUT -p tcp --dport 445 -j ACCEPT
+#ftp no funciona
+iptables -A INPUT -p tcp --dport 21 -j ACCEPT
+iptables -A OUTPUT -p tcp --sport 20 -j ACCEPT
+iptables -A INPUT -p tcp --dport 990 -j ACCEPT
+iptables -A OUTPUT -p tcp --sport 989 -j ACCEPT
+#Activar ceritificado SSL
+iptables -A INPUT -p tcp -m conntrack --ctstate NEW -m tcp -m multiport --dports 21,15000:15050 -j ACCEPT
+#cups ipp no funciona
+iptables -A INPUT -p tcp --dport 631 -j ACCEPT
+iptables -A INPUT -p udp --dport 631 -j ACCEPT
+iptables -A OUTPUT -p tcp --sport 631 -j ACCEPT
+iptables -A OUTPUT -p udp --sport 631 -j ACCEPT
+iptables -A OUTPUT -p tcp --sport 161 -j ACCEPT
+iptables -A OUTPUT -p udp --sport 161 -j ACCEPT
+#mysql
+iptables -A INPUT -p tcp -m tcp --dport 3306 -j ACCEPT
+iptables -A OUTPUT -p tcp --sport 3306 -j ACCEPT
 
+#Restringir input
 iptables -P INPUT DROP
 #Restringir output
-
 iptables -P OUTPUT DROP
