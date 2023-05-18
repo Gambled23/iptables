@@ -1,4 +1,4 @@
-#Limpiar iptables
+#Limpiar firewall
 iptables -P INPUT ACCEPT
 iptables -P OUTPUT ACCEPT
 iptables -P FORWARD ACCEPT
@@ -17,20 +17,24 @@ iptables -A INPUT -p tcp --dport 53 -j ACCEPT
 iptables -A INPUT -p udp --dport 53 -j ACCEPT
 iptables -A OUTPUT -p tcp --sport 53 -j ACCEPT
 iptables -A OUTPUT -p udp --sport 53 -j ACCEPT
-# HTTP Y HTTPS
+# HTTP Y HTTPS no funca al 100
 iptables -A INPUT -p tcp --dport 80 -j ACCEPT
 iptables -A INPUT -p tcp --dport 443 -j ACCEPT
 iptables -A OUTPUT -p tcp --sport 80 -j ACCEPT
 iptables -A OUTPUT -p tcp --sport 443 -j ACCEPT
+iptables -A INPUT -p tcp --dport 8080 -j ACCEPT
+iptables -A INPUT -p tcp --dport 8443 -j ACCEPT
+iptables -A OUTPUT -p tcp --sport 8080 -j ACCEPT
+iptables -A OUTPUT -p tcp --sport 8443 -j ACCEPT
+#ftp y ftps no funca al 100 cosa de nftables
+iptables -A INPUT -p tcp -m multiport --dport 21,20,990,989 -j ACCEPT
+iptables -A OUTPUT -p tcp -m multiport --dport 21,20,990,989 -j ACCEPT
 #nginx
 iptables -A INPUT -p tcp --dport 8080 -j ACCEPT
 iptables -A OUTPUT -p tcp --sport 8080 -j ACCEPT
 #ssh
 iptables -A INPUT -p tcp --dport 22 -j ACCEPT
 
-#ftp y ftps no funca al 100
-iptables -A INPUT -p tcp -m multiport --dport 21,20,990,989 -j ACCEPT
-iptables -A OUTPUT -p tcp -m multiport --dport 21,20,990,989 -j ACCEPT
 #samba
 iptables -A INPUT -p udp --dport 137 -j ACCEPT
 iptables -A INPUT -p udp --dport 138 -j ACCEPT
@@ -61,6 +65,10 @@ iptables -A OUTPUT -p tcp -m multiport --sport 110,995,143,993,25,5280,587,5222,
 
 #Activar ceritificado SSL
 iptables -A INPUT -p tcp -m conntrack --ctstate NEW -m tcp -m multiport --dports 21,15000:15050 -j ACCEPT
+
+#Permitir ping
+iptables -A INPUT -p icmp --icmp-type 8 -m conntrack --ctstate NEW,ESTABLISHED,RELATED -j ACCEPT
+iptables -A OUTPUT -p icmp --icmp-type 0 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 
 #Restringir input
 iptables -P INPUT DROP
